@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		27847A3217079AFD00CC82F4 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 27847A3117079AFD00CC82F4 /* main.c */; };
-		27847A3417079AFD00CC82F4 /* Format_Interpretation.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 27847A3317079AFD00CC82F4 /* Format_Interpretation.1 */; };
+		27847A5A1707A10000CC82F4 /* format.c in Sources */ = {isa = PBXBuildFile; fileRef = 27847A591707A10000CC82F4 /* format.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -18,7 +17,6 @@
 			dstPath = /usr/share/man/man1/;
 			dstSubfolderSpec = 0;
 			files = (
-				27847A3417079AFD00CC82F4 /* Format_Interpretation.1 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
@@ -26,8 +24,7 @@
 
 /* Begin PBXFileReference section */
 		27847A2D17079AFD00CC82F4 /* Format Interpretation */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Format Interpretation"; sourceTree = BUILT_PRODUCTS_DIR; };
-		27847A3117079AFD00CC82F4 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
-		27847A3317079AFD00CC82F4 /* Format_Interpretation.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Format_Interpretation.1; sourceTree = "<group>"; };
+		27847A591707A10000CC82F4 /* format.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = format.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,7 +41,7 @@
 		27847A2217079AFD00CC82F4 = {
 			isa = PBXGroup;
 			children = (
-				27847A3017079AFD00CC82F4 /* Format Interpretation */,
+				27847A591707A10000CC82F4 /* format.c */,
 				27847A2E17079AFD00CC82F4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -55,15 +52,6 @@
 				27847A2D17079AFD00CC82F4 /* Format Interpretation */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		27847A3017079AFD00CC82F4 /* Format Interpretation */ = {
-			isa = PBXGroup;
-			children = (
-				27847A3117079AFD00CC82F4 /* main.c */,
-				27847A3317079AFD00CC82F4 /* Format_Interpretation.1 */,
-			);
-			path = "Format Interpretation";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -117,7 +105,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				27847A3217079AFD00CC82F4 /* main.c in Sources */,
+				27847A5A1707A10000CC82F4 /* format.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
