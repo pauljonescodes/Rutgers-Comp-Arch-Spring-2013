@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		27847A1417079ADB00CC82F4 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 27847A1317079ADB00CC82F4 /* main.c */; };
-		27847A1617079ADB00CC82F4 /* Assembly_Language_Programming.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 27847A1517079ADB00CC82F4 /* Assembly_Language_Programming.1 */; };
+		2739549F170B541700046857 /* nCr.c in Sources */ = {isa = PBXBuildFile; fileRef = 2739549E170B541700046857 /* nCr.c */; };
+		27847A1417079ADB00CC82F4 /* formula.c in Sources */ = {isa = PBXBuildFile; fileRef = 27847A1317079ADB00CC82F4 /* formula.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -18,16 +18,16 @@
 			dstPath = /usr/share/man/man1/;
 			dstSubfolderSpec = 0;
 			files = (
-				27847A1617079ADB00CC82F4 /* Assembly_Language_Programming.1 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2739549E170B541700046857 /* nCr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = nCr.c; path = "Assembly Language Programming/nCr.c"; sourceTree = "<group>"; };
+		273954A0170B543400046857 /* nCr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = nCr.h; path = "Assembly Language Programming/nCr.h"; sourceTree = "<group>"; };
 		27847A0F17079ADB00CC82F4 /* Assembly Language Programming */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Assembly Language Programming"; sourceTree = BUILT_PRODUCTS_DIR; };
-		27847A1317079ADB00CC82F4 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
-		27847A1517079ADB00CC82F4 /* Assembly_Language_Programming.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Assembly_Language_Programming.1; sourceTree = "<group>"; };
+		27847A1317079ADB00CC82F4 /* formula.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = formula.c; path = "Assembly Language Programming/formula.c"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,7 +44,9 @@
 		27847A0417079ADA00CC82F4 = {
 			isa = PBXGroup;
 			children = (
-				27847A1217079ADB00CC82F4 /* Assembly Language Programming */,
+				273954A0170B543400046857 /* nCr.h */,
+				2739549E170B541700046857 /* nCr.c */,
+				27847A1317079ADB00CC82F4 /* formula.c */,
 				27847A1017079ADB00CC82F4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -55,15 +57,6 @@
 				27847A0F17079ADB00CC82F4 /* Assembly Language Programming */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		27847A1217079ADB00CC82F4 /* Assembly Language Programming */ = {
-			isa = PBXGroup;
-			children = (
-				27847A1317079ADB00CC82F4 /* main.c */,
-				27847A1517079ADB00CC82F4 /* Assembly_Language_Programming.1 */,
-			);
-			path = "Assembly Language Programming";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -117,7 +110,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				27847A1417079ADB00CC82F4 /* main.c in Sources */,
+				27847A1417079ADB00CC82F4 /* formula.c in Sources */,
+				2739549F170B541700046857 /* nCr.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -208,6 +202,7 @@
 				27847A1B17079ADB00CC82F4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
