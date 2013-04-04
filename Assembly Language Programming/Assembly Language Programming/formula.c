@@ -10,7 +10,7 @@ int main(int argc, const char * argv[])
 		int n = atoi(argv[1]);
 		
 		for (int k = 0; k <= n; k++) {
-			printf("%i x^%i ", choose(n, k), k);
+			printf("%i x^%i ", nCr(n, k), k);
 			
 			if (k != n)
 				printf("+ ");

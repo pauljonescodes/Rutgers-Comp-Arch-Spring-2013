@@ -192,16 +192,20 @@ void process_float(char * floatstr) {
 	}
 	
 	exponent_str = bin_to_dec(exponent_str, 0);
-	reverse(fraction);
+	
+	printf("%s\n", fraction);
+	
 	fraction = bin_to_dec(fraction, 0);
 	 
 	int exponent_int = atoi(exponent_str) - 127;
-	double exponent_val = pow(2, exponent_int);
+	// double exponent_val = pow(2, exponent_int);
 	double fraction_int = 1 + pow(2, -atoi(fraction));
 	
-	double value =  exponent_val * fraction_int;
+	//double value =  exponent_val * fraction_int;
 	
-	printf("%f\n", value);
+	printf("%f x 2^%i", fraction_int, exponent_int);
+	
+	//printf("%f\n", value);
 }
 
 
@@ -214,10 +218,14 @@ int main (int argc, char *argv[]) {
 		printf("%s", bin_to_dec(argv[1], 1));
 	} else if (strcmp(argv[2], "float") == 0) {
 		
-		tmp = strcpy(tmp, argv[1]);
-		reverse(tmp);
-		
-		process_float(tmp);
+		if (strcasecmp(argv[1], "10000000000000000000000000000000") == 0) {
+			tmp = "-0.0e0";
+			printf("%s", tmp);
+		} else {
+			tmp = strcpy(tmp, argv[1]);
+			reverse(tmp);
+			process_float(tmp);
+		}
 	} else {
 		fprintf(stderr, "I don't recognize the 2nd argument you inputted.");
 	}
