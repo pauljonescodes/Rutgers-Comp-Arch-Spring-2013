@@ -1,4 +1,6 @@
-extern int Factorial(int n) {
+#include <stdio.h>
+
+int Factorial(int n) {
 	int ret = 1;
 	
 	while (n > 0) {
@@ -10,7 +12,7 @@ extern int Factorial(int n) {
 }
 
 
-extern int nCr(int n, int r) {
+int nCr(int n, int r) {
 	int nFactorial = Factorial(n);
 	
 	if (nFactorial == -1)
