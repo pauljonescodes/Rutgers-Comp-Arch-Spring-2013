@@ -23,3 +23,4 @@ nCr.o: nCr.s nCr.h
 clean:
 	-rm -f *.o
 	-rm -f $(TARGET)
+	-rm -f *.h.gch
