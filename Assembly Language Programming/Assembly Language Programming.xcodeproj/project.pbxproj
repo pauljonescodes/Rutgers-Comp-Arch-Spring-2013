@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2739549F170B541700046857 /* nCr.c in Sources */ = {isa = PBXBuildFile; fileRef = 2739549E170B541700046857 /* nCr.c */; };
 		276852CA170D27EE007814FD /* mystery.s in Sources */ = {isa = PBXBuildFile; fileRef = 276852C7170D27EE007814FD /* mystery.s */; };
 		276852CF170D2A1F007814FD /* nCr.s in Sources */ = {isa = PBXBuildFile; fileRef = 276852CE170D2A1F007814FD /* nCr.s */; };
+		276852D4170D3390007814FD /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 276852D3170D3390007814FD /* Makefile */; };
 		27847A1417079ADB00CC82F4 /* formula.c in Sources */ = {isa = PBXBuildFile; fileRef = 27847A1317079ADB00CC82F4 /* formula.c */; };
 /* End PBXBuildFile section */
 
@@ -26,10 +26,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2739549E170B541700046857 /* nCr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = nCr.c; path = "Assembly Language Programming/nCr.c"; sourceTree = "<group>"; };
 		276852C7170D27EE007814FD /* mystery.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = mystery.s; path = "Assembly Language Programming/mystery.s"; sourceTree = "<group>"; };
 		276852C8170D27EE007814FD /* nCr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nCr.h; path = "Assembly Language Programming/nCr.h"; sourceTree = "<group>"; };
 		276852CE170D2A1F007814FD /* nCr.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = nCr.s; path = "Assembly Language Programming/nCr.s"; sourceTree = "<group>"; };
+		276852D2170D32AA007814FD /* formula.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = formula.h; sourceTree = "<group>"; };
+		276852D3170D3390007814FD /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = "Assembly Language Programming/Makefile"; sourceTree = "<group>"; };
 		27847A0F17079ADB00CC82F4 /* Assembly Language Programming */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Assembly Language Programming"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27847A1317079ADB00CC82F4 /* formula.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = formula.c; path = "Assembly Language Programming/formula.c"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -48,11 +49,12 @@
 		27847A0417079ADA00CC82F4 = {
 			isa = PBXGroup;
 			children = (
-				276852CE170D2A1F007814FD /* nCr.s */,
+				276852D3170D3390007814FD /* Makefile */,
+				27847A1317079ADB00CC82F4 /* formula.c */,
+				276852D2170D32AA007814FD /* formula.h */,
 				276852C7170D27EE007814FD /* mystery.s */,
 				276852C8170D27EE007814FD /* nCr.h */,
-				2739549E170B541700046857 /* nCr.c */,
-				27847A1317079ADB00CC82F4 /* formula.c */,
+				276852CE170D2A1F007814FD /* nCr.s */,
 				27847A1017079ADB00CC82F4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -117,9 +119,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				27847A1417079ADB00CC82F4 /* formula.c in Sources */,
-				2739549F170B541700046857 /* nCr.c in Sources */,
 				276852CA170D27EE007814FD /* mystery.s in Sources */,
 				276852CF170D2A1F007814FD /* nCr.s in Sources */,
+				276852D4170D3390007814FD /* Makefile in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

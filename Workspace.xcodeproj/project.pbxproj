@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		276852D1170D3123007814FD /* nCr.c in Sources */ = {isa = PBXBuildFile; fileRef = 276852D0170D3123007814FD /* nCr.c */; };
 		278479C017079A8600CC82F4 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 278479BF17079A8600CC82F4 /* main.c */; };
 		278479C217079A8600CC82F4 /* Workspace.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 278479C117079A8600CC82F4 /* Workspace.1 */; };
 /* End PBXBuildFile section */
@@ -56,6 +57,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		276852D0170D3123007814FD /* nCr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = nCr.c; sourceTree = "<group>"; };
 		278479BB17079A8600CC82F4 /* Workspace */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Workspace; sourceTree = BUILT_PRODUCTS_DIR; };
 		278479BF17079A8600CC82F4 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		278479C117079A8600CC82F4 /* Workspace.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Workspace.1; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 		278479BE17079A8600CC82F4 /* Workspace */ = {
 			isa = PBXGroup;
 			children = (
+				276852D0170D3123007814FD /* nCr.c */,
 				278479BF17079A8600CC82F4 /* main.c */,
 				278479C117079A8600CC82F4 /* Workspace.1 */,
 			);
@@ -238,6 +241,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				278479C017079A8600CC82F4 /* main.c in Sources */,
+				276852D1170D3123007814FD /* nCr.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
