@@ -1,6 +1,8 @@
-#ifndef Assembly_Language_Programming_nCr_h
-#define Assembly_Language_Programming_nCr_h
+#ifndef _NCR_H_
+#define _NCR_H_
 
-int choose (int n, int k);
+extern int Factorial(int n);
 
-#endif
+extern int nCr(int n, int r);
+
+#endif /* _NCR_H_ */

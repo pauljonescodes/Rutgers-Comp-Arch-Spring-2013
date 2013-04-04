@@ -1,95 +1,82 @@
-	.section	__TEXT,__text,regular,pure_instructions
-	.globl	_choose
-	.align	4, 0x90
-_choose:
-Leh_func_begin1:
-	pushq	%rbp
-Ltmp0:
-	movq	%rsp, %rbp
-Ltmp1:
-	subq	$16, %rsp
-Ltmp2:
-	movl	%edi, -4(%rbp)
-	movl	%esi, -8(%rbp)
-	movl	-8(%rbp), %eax
-	cmpl	$0, %eax
-	jne	LBB1_2
-	movl	$1, -16(%rbp)
-	jmp	LBB1_3
-LBB1_2:
-	movl	-8(%rbp), %eax
-	subl	$1, %eax
-	movl	-4(%rbp), %ecx
-	subl	$1, %ecx
-	movl	%ecx, %edi
-	movl	%eax, %esi
-	callq	_choose
-	movl	%eax, %ecx
-	movl	-4(%rbp), %esi
-	imull	%esi, %ecx
-	movl	-8(%rbp), %esi
-	movl	%ecx, %eax
-	cltd
-	idivl	%esi
-	movl	%eax, %ecx
-	movl	%ecx, -16(%rbp)
-LBB1_3:
-	movl	-16(%rbp), %eax
-	movl	%eax, -12(%rbp)
-	movl	-12(%rbp), %eax
-	addq	$16, %rsp
-	popq	%rbp
+.globl Factorial
+	.type	Factorial, @function
+Factorial:
+  # Your code for Factorial should go here
+
+pushl	%ebp
+	movl	%esp, %ebp
+	subl	$16, %esp
+	movl	$1, -4(%ebp)
+	jmp	.L2
+.L4:
+	movl	$-1, %eax
+	jmp	.L5
+.L3:
+	movl	-4(%ebp), %eax
+	imull	8(%ebp), %eax
+	jo	.L4
+	movl	%eax, -4(%ebp)
+	subl	$1, 8(%ebp)
+.L2:
+	cmpl	$0, 8(%ebp)
+	jg	.L3
+	movl	-4(%ebp), %eax
+.L5:
+	leave
 	ret
-Leh_func_end1:
+	.size	Factorial, .-Factorial
 
-	.section	__TEXT,__eh_frame,coalesced,no_toc+strip_static_syms+live_support
-EH_frame0:
-Lsection_eh_frame:
-Leh_frame_common:
-Lset0 = Leh_frame_common_end-Leh_frame_common_begin
-	.long	Lset0
-Leh_frame_common_begin:
-	.long	0
-	.byte	1
-	.asciz	 "zR"
-	.byte	1
-	.byte	120
-	.byte	16
-	.byte	1
-	.byte	16
-	.byte	12
-	.byte	7
-	.byte	8
-	.byte	144
-	.byte	1
-	.align	3
-Leh_frame_common_end:
-	.globl	_choose.eh
-_choose.eh:
-Lset1 = Leh_frame_end1-Leh_frame_begin1
-	.long	Lset1
-Leh_frame_begin1:
-Lset2 = Leh_frame_begin1-Leh_frame_common
-	.long	Lset2
-Ltmp3:
-	.quad	Leh_func_begin1-Ltmp3
-Lset3 = Leh_func_end1-Leh_func_begin1
-	.quad	Lset3
-	.byte	0
-	.byte	4
-Lset4 = Ltmp0-Leh_func_begin1
-	.long	Lset4
-	.byte	14
-	.byte	16
-	.byte	134
-	.byte	2
-	.byte	4
-Lset5 = Ltmp1-Ltmp0
-	.long	Lset5
-	.byte	13
-	.byte	6
-	.align	3
-Leh_frame_end1:
+.globl nCr
+	.type	nCr, @function
+nCr:
+  # Your code for nCr should go here
 
-
-.subsections_via_symbols
+	pushl	%ebp
+	movl	%esp, %ebp
+	subl	$36, %esp
+	movl	8(%ebp), %eax
+	movl	%eax, (%esp)
+	call	Factorial
+	movl	%eax, -20(%ebp)
+	cmpl	$-1, -20(%ebp)
+	jne	.L6
+	movl	$-1, %eax
+	jmp	.L7
+.L6:
+	movl	12(%ebp), %eax
+	movl	%eax, (%esp)
+	call	Factorial
+	movl	%eax, -16(%ebp)
+	cmpl	$-1, -16(%ebp)
+	jne	.L8
+	movl	$-1, %eax
+	jmp	.L7
+.L8:
+	movl	12(%ebp), %eax
+	movl	8(%ebp), %edx
+	movl	%edx, %ecx
+	subl	%eax, %ecx
+	movl	%ecx, %eax
+	movl	%eax, (%esp)
+	call	Factorial
+	movl	%eax, -12(%ebp)
+	cmpl	$-1, -12(%ebp)
+	jne	.L9
+	movl	$-1, %eax
+	jmp	.L7
+.L9:
+	movl	-16(%ebp), %eax
+	imull	-12(%ebp), %eax
+	movl	%eax, -8(%ebp)
+	movl	-20(%ebp), %eax
+	movl	%eax, %edx
+	sarl	$31, %edx
+	idivl	-8(%ebp)
+	movl	%eax, -4(%ebp)
+	movl	-4(%ebp), %eax
+.L7:
+	leave
+	ret
+	.size	nCr, .-nCr
+	.ident	"GCC: (GNU) 4.4.7 20120313 (Red Hat 4.4.7-3)"
+	.section	.note.GNU-stack,"",@progbits
