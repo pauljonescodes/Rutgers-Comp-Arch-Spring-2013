@@ -24,7 +24,7 @@ int add(int a, int b) {
 	 ret					; return
 	 */
 	
-	return a + b; 
+	return a + b;
 }
 
 int compute_fib(int a) {
@@ -142,9 +142,9 @@ int compute_fib(int a) {
 }
 
 
-int main(int argc, const char * argv[]) {
+int main(int argc, char** argv) {
 	int i = 0;
-	int n = atoi(argv[2]);
+	int n = atoi(argv[1]);
 	
 	/*
 	 
@@ -172,5 +172,6 @@ int main(int argc, const char * argv[]) {
 		i++;
 	}
 	
-	printf("%i", compute_fib(n));
+	printf("%i\n", compute_fib(n));
+	return 0;
 }
