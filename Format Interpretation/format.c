@@ -123,11 +123,9 @@ char * bin_sub(char * bin_one, char * bin_two) {
 	return bin_add(bin_one, bin_two);
 }
 
-char * bin_to_dec (char * bin, int flip) {
+int bin_to_dec (char * bin, int flip) {
 	int i = 0;
 	int power = (int)strlen(bin) - 1;
-	char *value_str;
-	char digit;
 	int value = 0;
 	int flipped = 0;
     
@@ -149,20 +147,24 @@ char * bin_to_dec (char * bin, int flip) {
 		value++;
 	}
 	
-	power = (int)log10(value) + 1;
-	value_str = malloc(power);
-	memset(value_str, 0, power);
-	value_str[power] = '\0';
-	
-	for (i = 0; i < power; i++) {
-		digit = (int) value % 10 + '0';
-		value_str[i] = digit;
-		value /= 10;
+	return value;
+}
+
+double process_mantissa (char * bin) {
+	int i = 0;
+	int power = -1;
+	double value = 0;
+    
+	for (i = 0; i < (int)strlen(bin); i++) {
+		
+		if (bin[i] == '1') {
+			value += pow(2, power);
+		}
+		
+		power--;
 	}
 	
-	reverse(value_str);
-	
-	return value_str;
+	return value;
 }
 
 void process_float(char * floatstr) {
@@ -177,7 +179,7 @@ void process_float(char * floatstr) {
 	
 	char * fraction = malloc(23 + 1);
 	memset(fraction, 0, 23);
-	exponent_str[23] = '\0';
+	fraction[23] = '\0';
 	
 	for (; i < (int)strlen(floatstr); i++) {
 		
@@ -191,21 +193,37 @@ void process_float(char * floatstr) {
 		}
 	}
 	
-	exponent_str = bin_to_dec(exponent_str, 0);
+	int sign_int = floatstr[0] == '0' ? 1 : -1;
 	
-	printf("%s\n", fraction);
+	//printf("Exponent-str: %s\n", exponent_str);
 	
-	fraction = bin_to_dec(fraction, 0);
-	 
-	int exponent_int = atoi(exponent_str) - 127;
-	// double exponent_val = pow(2, exponent_int);
-	double fraction_int = 1 + pow(2, -atoi(fraction));
+	double exponent_int = bin_to_dec(exponent_str, 0) - 127;
 	
-	//double value =  exponent_val * fraction_int;
+	//printf("Exponent-int: %f\n", exponent_int);
 	
-	printf("%f x 2^%i", fraction_int, exponent_int);
+	exponent_int = pow(2, exponent_int);
+	double fraction_double = 1 + process_mantissa(fraction);
 	
-	//printf("%f\n", value);
+	//printf("Sign: %i\n", sign_int);
+	//printf("Exponent: %f \n", exponent_int);
+	//printf("Fraction: %f \n", fraction_double);
+	
+	double value = sign_int * exponent_int * fraction_double;
+	int power = 0;
+	
+	if (value < 1) {
+		while (value < 1) {
+			value *= 10;
+			power--;
+		}
+	} else if (value > 9) {
+		while (value > 9) {
+			value /= 10;
+			power++;
+		}
+	}
+	
+	printf("%fe%i", value, power);
 }
 
 
@@ -215,7 +233,7 @@ int main (int argc, char *argv[]) {
 	char * tmp = malloc(strlen(argv[2] + 1));
 	tmp[(int)strlen(argv[2])] = '\0';
 	if (strcmp(argv[2], "int") == 0) {
-		printf("%s", bin_to_dec(argv[1], 1));
+		printf("%i", bin_to_dec(argv[1], 1));
 	} else if (strcmp(argv[2], "float") == 0) {
 		
 		if (strcasecmp(argv[1], "10000000000000000000000000000000") == 0) {
