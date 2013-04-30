@@ -1,7 +1,7 @@
 TARGET = y86emul
 LIBS = -lm
 CC = gcc
-CFLAGS =-g -ansi -pedantic -Wall
+CFLAGS =-g -pedantic -Wall
 
 .PHONY: default all clean
 
@@ -22,3 +22,4 @@ $(TARGET): $(OBJECTS)
 clean:
 	-rm -f *.o
 	-rm -f $(TARGET)
+	-rm -f *~

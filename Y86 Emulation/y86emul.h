@@ -1,7 +1,7 @@
-#define AOK "everything is fine"
-#define HLT "halt instruction has been encountered"
-#define ADR "some sort of invalid address"
-#define INS "an invalid instruction"
+#define AOK "everything is fine\n"
+#define HLT "halt instruction has been encountered\n"
+#define ADR "some sort of invalid address\n"
+#define INS "an invalid instruction\n"
 
 #define EAX 0
 #define ECX 1
@@ -23,6 +23,7 @@ typedef struct cpu {
 	int edi;
 
 	int program_counter;
+	int size;
 
 	bool overflow;
 	bool zero;

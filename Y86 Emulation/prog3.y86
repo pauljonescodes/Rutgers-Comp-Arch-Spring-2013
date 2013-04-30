@@ -1,4 +1,5 @@
 .size	0800
+.string	000000f3	"Hello is this cool"
 .byte	0000007c	0a
 .byte	000000dc	0a
 .byte	00000104	0a

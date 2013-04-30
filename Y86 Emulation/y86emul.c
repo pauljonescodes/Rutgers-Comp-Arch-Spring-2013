@@ -57,7 +57,61 @@ char * file_to_string(const char * filename) {
 	}
 }
 
-int execute_loaded_memory(char * bytes, cpu * cpu) {
+int execute_loaded_memory(unsigned char * bytes, cpu * cpu) {
+	
+	while(cpu->program_counter < cpu->size) {
+		switch (bytes[cpu->program_counter]) {
+			case 0x00: /* nop */
+				cpu->program_counter++;
+				break; /* done */
+			case 0x10: /* halt */
+				fprintf(stderr, HLT);
+				return 0;
+				break; /* done */
+			case 0x20: /* rrmovl */
+				break;
+			case 0x30: /* irmovl */
+				break;
+			case 0x40: /* rmmovl */
+				break;
+			case 0x50: /* mrmovl */
+				break;
+			case 0x60: /* addl */
+				break;
+			case 0x61: /* subl */
+				break;
+			case 0x62: /* andl */	
+				break;
+			case 0x63: /* xorl */
+				break;
+			case 0x70: /* jmp */
+				break;
+			case 0x71: /* jle */
+				break;
+			case 0x72: /* jl */
+				break;
+			case 0x73: /* je */
+				break;
+			case 0x74: /* jne */
+				break;
+			case 0x75: /* jge */
+				break;
+			case 0x76: /* jg */
+				break;
+			case 0x80: /* call */
+				break;
+			case 0x90: /* ret */
+				break;
+			case 0xa0: /* pushl */
+				break;
+			case 0xb0: /* popl */
+				break;
+			default:
+				cpu->program_counter++;
+				break;
+		}
+	}
+
 	return 0;
 }
 
@@ -65,7 +119,7 @@ int process_program(char * program) {
 	char * dup = strdup(program);
 	char * tok = strtok(dup, "\t\n");
 
-	int size;
+	int size; /* will store the size directive */
 
 	int i; /* used for counters */
 	int j; 
@@ -74,10 +128,12 @@ int process_program(char * program) {
 	char * hex_address; /* every time I get a hex address, I store it in this. */
 	char * argument; /* every time I get an argument, I store it in this. */
 
+	int long_argument;
+
 	char * sub_argument;
 
 	cpu * cpu; /* this struct represents my cpu, with registers and all */
-	char * bytes; /* this is an array of integer values representing instructions and values */
+	unsigned char * bytes; /* this is an array of integer values representing instructions and values */
 
 	/*
 	 * Find size directive
@@ -100,13 +156,12 @@ int process_program(char * program) {
 	cpu = malloc(sizeof *cpu);
 
 	cpu->program_counter = -1;
+	cpu->size = size;
 
-	size = (size / 8);
-	bytes = malloc(size * sizeof *bytes);
+	bytes = malloc((size + 1) * sizeof(unsigned char));
 
-	for (; i > 0; i--) {
-		bytes[j] = (char)0;
-		j++;
+	for (i = 0; i < size; i++) {
+		bytes[i] = 0;
 	}
 
 	dup = strdup(program );
@@ -133,23 +188,33 @@ int process_program(char * program) {
 			argument = strdup(tok); /* the actual string itself */
 			tok = strtok(NULL, "\n\t"); /* to move past the string */
 
-			if (strcmp(directive, ".string") == 0 || 
-				strcmp(directive, ".text") == 0) { /* string and texts are the same, 
-								    * but one gets the program counter */
+			if (strcmp(directive, ".string") == 0) {
+				i = hex_to_dec(hex_address);
+				j = 1;
+
+				while (j < strlen(argument) - 1) {
+					bytes[i] = (unsigned char) argument[j];
+
+					i++;
+					j++;
+				}
+			} else if ( strcmp(directive, ".text") == 0) { 
 				i = hex_to_dec(hex_address);
 				j = 0;
-
-				if (cpu->program_counter == -1 && strcmp(directive, ".text") == 0) {
+				
+				if (cpu->program_counter == -1) {
 					cpu->program_counter = i;
-					printf("%i\n", i);
+				} else if (cpu->program_counter != -1) {
+					fprintf(stderr, INS);
+					return 1;
 				}
 
 				while (j < strlen(argument)) {
 					/* in substrings of length 2 from 0 to n */
 					sub_argument = substr(argument, sub_argument, j, 2);
 					/* convert it to decimal */
-					bytes[i] = (char)hex_to_dec(sub_argument);
-					
+					bytes[i] = (unsigned char) hex_to_dec(sub_argument);
+
 					i++;
 					j = j + 2;
 				}
@@ -158,13 +223,21 @@ int process_program(char * program) {
 				j = hex_to_dec(hex_address); /* in hex */
 
 				for (; i > 0; i--) {
-					bytes[j] = (char)0; /* make them all zeroes! */
+					bytes[j] = (unsigned char)0; /* make them all zeroes! */
 					j++;
 				}
 			} else if (strcmp(directive, ".long") == 0) { /* .long directive */
-				bytes[hex_to_dec(hex_address)] = (char)atoi(argument);
+				long_argument = atoi(argument);
+				j = hex_to_dec(hex_address);
+				*(unsigned int*)(bytes+j) = long_argument;
+				/*(unsigned int*)(bytes+j) = (((long_argument & 0xff000000) >> 24) | ((long_argument & 0x00ff0000) >> 8) | ((long_argument & 0x0000ff00) << 8) | ((long_argument & 0x000000ff) << 24)); */
+/*				bytes[j + 3] = (long_argument & 0xff000000) >> 24;
+				bytes[j + 2] = (long_argument & 0x00ff0000) >> 16;
+				bytes[j + 1] = (long_argument & 0x0000ff00) >> 8 ;
+				bytes[j + 0] = (long_argument & 0x000000ff);*/
+
 			} else if (strcmp(directive, ".byte") == 0) { /* .byte directive */
-				bytes[hex_to_dec(hex_address)] = (char)hex_to_dec(argument);
+				bytes[hex_to_dec(hex_address)] = (unsigned char)hex_to_dec(argument);
 			}
 
 			free(hex_address); /* free the stuff we're done with */
@@ -176,15 +249,17 @@ int process_program(char * program) {
 			return 1;
 		}
 	}
-	
-	for (i = 0; i < size; i++) {
-		printf("%i %i \n", i, (int)bytes[i]);
-	}
 
-	return execute_loaded_memory(bytes, cpu);
+	free(dup);
+	free(tok);
+	
+	for (i = 0; i < 0x30; i++) {
+		printf("%x\t%x\n", i, (int)bytes[i]);
+	} 
+
+	return execute_loaded_memory(bytes, cpu); 
 }
 
 int main(int argc, const char * argv[]) {
-	char * program = file_to_string(argv[1]);
-	return process_program(program);
+	return process_program(file_to_string(argv[1]));
 }
