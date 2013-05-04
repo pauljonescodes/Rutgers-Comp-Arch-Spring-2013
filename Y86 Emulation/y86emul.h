@@ -13,18 +13,12 @@
 #define EDI 7
 
 typedef struct cpu {
-	int eax; 
-	int ecx; 
-	int edx; 
-	int ebx; 
-	int esp; 
-	int ebp; 
-	int esi; 
-	int edi;
+	int registers[9];
 
 	int program_counter;
 	int size;
 
+	bool cont;
 	bool overflow;
 	bool zero;
 	bool negative;

@@ -1,0 +1,44 @@
+\documentclass{article}
+
+\title{Y86 Readme}
+\date{\today}
+\author{Paul Jones\\ Computer Architecture (01:198:211) \\ School of Arts and Sciences \\ Rutgers University}
+
+\begin{document}
+
+\maketitle
+
+\clearpage
+% this file should describe your design and implementation of the formula program. 
+
+% In particular, it should detail your design, any design/implementation chal- lenges that you ran into, 
+\section{Implementation}
+
+My implementation is a big switch statement on over operation.
+
+Based on that, it parses out the arguments and fetches and executes accordingly.
+
+\section{Challenges}
+
+This program was undoutedly the hardest programming assignment I have ever worked on.
+
+The wide range of possible input made test cases difficult.
+
+The C programming language is very bad a String manipulation, yet a lot of String manipulation was necessary.
+
+The scattered documentation made clear answers to precise questions difficult to come by.
+
+It was rewarding in the most frustrating way.
+
+\section{Big-O Analysis}
+
+\subsection{Space}
+
+It uses exactly the amount of space that an actual Y86 implementation would!
+Every byte is stored as a byte and manually split and combined to form meaningful information.
+
+\subsection{Time}
+
+It is completely linear based on input.
+
+\end{document}

@@ -1,9 +1,7 @@
 TARGET = y86emul
 LIBS = -lm
 CC = gcc
-CFLAGS =-g -pedantic -Wall
-
-.PHONY: default all clean
+CFLAGS =-ansi -pedantic -Wall
 
 default: $(TARGET)
 all: default
@@ -13,8 +11,6 @@ HEADERS = $(wildcard *.h)
 
 %.o: %.c $(HEADERS)
 	$(CC) $(CFLAGS) -c $< -o $@
-
-.PRECIOUS: $(TARGET) $(OBJECTS)
 
 $(TARGET): $(OBJECTS)
 	$(CC) $(OBJECTS) -Wall $(LIBS) -o $@
