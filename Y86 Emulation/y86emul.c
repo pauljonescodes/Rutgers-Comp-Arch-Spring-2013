@@ -16,7 +16,7 @@
 #include "y86emul.h"
 #include "hex_converting.h"
 
-#define DEVELOPMENT false
+#define DEVELOPMENT true
 
 char * strdup (const char *s) {
     char *d = malloc (strlen (s) + 1);
@@ -74,7 +74,6 @@ int execute_loaded_memory(unsigned char * bytes, cpu * cpu) {
 
 	while(cpu->cont) {
 		switch (bytes[cpu->program_counter]) {
-
 			case 0x00: /* nop */
 				if (DEVELOPMENT) 
 					printf("%x\tnop\n", cpu->program_counter);
@@ -135,7 +134,10 @@ int execute_loaded_memory(unsigned char * bytes, cpu * cpu) {
 					printf("\trA:%x\trB:%x\tD:%x\n", one, two, dst);
 				}
 
-				bytes[two + dst] = one;
+				bytes[cpu->registers[two] + dst + 0] = (cpu->registers[one] & 0x000000ff);
+				bytes[cpu->registers[two] + dst + 1] = (cpu->registers[one] & 0x0000ff00) >> 8;	
+				bytes[cpu->registers[two] + dst + 2] = (cpu->registers[one] & 0x00ff0000) >> 16;
+				bytes[cpu->registers[two] + dst + 3] = (cpu->registers[one] & 0xff000000) >> 24;
 
 				cpu->program_counter += 6;
 
@@ -154,7 +156,10 @@ int execute_loaded_memory(unsigned char * bytes, cpu * cpu) {
 					printf("\trA:%x\trB:%x\tD:%x\n", one, two, dst);
 				}
 
-				cpu->registers[one] = bytes[cpu->registers[two] + dst];
+				cpu->registers[one] =  (bytes[cpu->registers[two] + dst + 0])
+				                    +  (bytes[cpu->registers[two] + dst + 1]  <<  8)
+			                            +  (bytes[cpu->registers[two] + dst + 2]  << 16)
+				                    +  (bytes[cpu->registers[two] + dst + 3]  << 24);
 			
 				cpu->program_counter += 6;
 
@@ -170,7 +175,7 @@ int execute_loaded_memory(unsigned char * bytes, cpu * cpu) {
 				val = cpu->registers[one] + cpu->registers[two];
 
 				if ((cpu->registers[one] > 0 && cpu->registers[two] > 0 && val < 0) || 
-					(cpu->registers[one] < 0 && cpu->registers[two] < 0 && val > 0)) {
+			            (cpu->registers[one] < 0 && cpu->registers[two] < 0 && val > 0)) {
 					cpu->overflow = true;
 				}
 
@@ -203,7 +208,7 @@ int execute_loaded_memory(unsigned char * bytes, cpu * cpu) {
 				val = cpu->registers[two] - cpu->registers[one];
 
 				if ((cpu->registers[one] < 0 && cpu->registers[two] > 0 && val < 0) || 
-					(cpu->registers[one] > 0 && cpu->registers[two] < 0 && val > 0))
+			            (cpu->registers[one] > 0 && cpu->registers[two] < 0 && val > 0))
 					cpu->overflow = true;
 
 				if (val == 0) {
@@ -224,7 +229,7 @@ int execute_loaded_memory(unsigned char * bytes, cpu * cpu) {
 				cpu->program_counter += 2;
 
 				break;
-			case 0x62: /* imull */	
+			case 0x64: /* imull */	
 				one = (bytes[cpu->program_counter + 1] & 0xf0) >> 4;
 				two = (bytes[cpu->program_counter + 1] & 0x0f);
 
@@ -232,11 +237,12 @@ int execute_loaded_memory(unsigned char * bytes, cpu * cpu) {
 				cpu->negative = false;
 				cpu->zero     = false;
 
-				val = cpu->registers[one] - cpu->registers[two];
+				val = cpu->registers[one] * cpu->registers[two];
 
 				if ((cpu->registers[one] > 0 && cpu->registers[two] > 0 && val < 0) ||
-					(cpu->registers[one] < 0 && cpu->registers[two] < 0 && val < 0) ||
-					(cpu->registers[one] < 0 && cpu->registers[two] > 0 && val > 0)) {
+				    (cpu->registers[one] < 0 && cpu->registers[two] < 0 && val < 0) ||
+				    (cpu->registers[one] < 0 && cpu->registers[two] > 0 && val > 0) ||
+				    (cpu->registers[one] > 0 && cpu->registers[two] < 0 && val > 0)) {
 					cpu->overflow = true;
 				}
 
@@ -258,14 +264,53 @@ int execute_loaded_memory(unsigned char * bytes, cpu * cpu) {
 				cpu->program_counter += 2;
 
 				break;
+			case 0x62: /* andl */
+				one = (bytes[cpu->program_counter + 1] & 0xf0) >> 4;
+				two = (bytes[cpu->program_counter + 1] & 0x0f);
+
+				cpu->negative = false;
+				cpu->zero     = false;
+
+				if (DEVELOPMENT) {
+					printf("%x\tandl", cpu->program_counter);
+					printf("\trA:%x\trB:%x\n", one, two);
+				}
+				
+				val = one & two;
+
+				if (val == 0) {
+					cpu->zero = true;
+				}
+
+				if (val < 0) {
+					cpu->negative = true;
+				}
+
+				cpu->program_counter += 2;
+
+				break;			
 			case 0x63: /* xorl */
 				one = (bytes[cpu->program_counter + 1] & 0xf0) >> 4;
 				two = (bytes[cpu->program_counter + 1] & 0x0f);
+
+				cpu->negative = false;
+				cpu->zero     = false;
 
 				if (DEVELOPMENT) {
 					printf("%x\txorl", cpu->program_counter);
 					printf("\trA:%x\trB:%x\n", one, two);
 				}
+				
+				val = one ^ two;
+
+				if (val == 0) {
+					cpu->zero = true;
+				}
+
+				if (val < 0) {
+					cpu->negative = true;
+				}
+				
 
 				cpu->program_counter += 2;
 
@@ -292,7 +337,7 @@ int execute_loaded_memory(unsigned char * bytes, cpu * cpu) {
 				if (DEVELOPMENT) 
 					printf("%x\tjle\tD:%x\n", cpu->program_counter, dst);
 
-				if (cpu->negative != cpu->overflow || cpu->zero)
+				if (cpu->negative ^ cpu->overflow || cpu->zero)
 					cpu->program_counter = dst;
 				else
 					cpu->program_counter += 5;
@@ -307,7 +352,7 @@ int execute_loaded_memory(unsigned char * bytes, cpu * cpu) {
 				if (DEVELOPMENT) 
 					printf("%x\tjl\tD:%x\n", cpu->program_counter, dst);
 				
-				if (cpu->negative != cpu->overflow)
+				if (cpu->negative ^ cpu->overflow)
 					cpu->program_counter = dst;
 				else
 					cpu->program_counter += 5;
@@ -352,7 +397,7 @@ int execute_loaded_memory(unsigned char * bytes, cpu * cpu) {
 				if (DEVELOPMENT) 
 					printf("%x\tjge\tD:%x\n", cpu->program_counter, dst);
 
-				if (cpu->negative == cpu->overflow)
+				if (!(cpu->negative ^ cpu->overflow))
 					cpu->program_counter = dst;
 				else
 					cpu->program_counter += 5;
@@ -367,7 +412,7 @@ int execute_loaded_memory(unsigned char * bytes, cpu * cpu) {
 				if (DEVELOPMENT) 
 					printf("%x\tjg\tD:%x\n", cpu->program_counter, dst);
 
-				if (cpu->negative == cpu->overflow && !cpu->zero)
+				if (!(cpu->negative ^ cpu->overflow) && !cpu->zero)
 					cpu->program_counter = dst;
 				else
 					cpu->program_counter += 5;
@@ -385,10 +430,11 @@ int execute_loaded_memory(unsigned char * bytes, cpu * cpu) {
 				cpu->registers[ESP] -= 4;
 				iin = cpu->program_counter + 5; 
 				val = 0;
-				for (; val < 4; val++) {
-					bytes[cpu->registers[ESP] + dst + val] = iin % 256;
-					iin /= 256;
-				}
+				
+				bytes[cpu->registers[ESP] + 0] = (iin & 0x000000ff);
+				bytes[cpu->registers[ESP] + 1] = (iin & 0x0000ff00) >> 8;
+				bytes[cpu->registers[ESP] + 2] = (iin & 0x00ff0000) >> 16;
+				bytes[cpu->registers[ESP] + 3] = (iin & 0xff000000) >> 24;
 
 				if (DEVELOPMENT)
 					printf("\t%x\n", bytes[cpu->registers[ESP]]);
@@ -400,7 +446,11 @@ int execute_loaded_memory(unsigned char * bytes, cpu * cpu) {
 				if (DEVELOPMENT) 
 					printf("%x\tret\t%x\n", cpu->program_counter, bytes[cpu->registers[ESP - 4]]);
 
-				cpu->program_counter = bytes[cpu->registers[ESP]];
+				cpu->program_counter = (bytes[cpu->registers[ESP] + 0])
+				                     + (bytes[cpu->registers[ESP] + 1] << 8)
+				                     + (bytes[cpu->registers[ESP] + 2] << 16)
+				                     + (bytes[cpu->registers[ESP] + 3] << 24);
+				
 				cpu->registers[ESP] += 4;
 
 				break;
@@ -414,7 +464,11 @@ int execute_loaded_memory(unsigned char * bytes, cpu * cpu) {
 				}
 
 				cpu->registers[ESP] -= 4;
-				bytes[cpu->registers[ESP]] = cpu->registers[one];
+				
+				bytes[cpu->registers[ESP] + 0] = (cpu->registers[one]);
+				bytes[cpu->registers[ESP] + 1] = (cpu->registers[one] & 0x0000ff00) >> 8;
+				bytes[cpu->registers[ESP] + 2] = (cpu->registers[one] & 0x00ff0000) >> 16;
+				bytes[cpu->registers[ESP] + 3] = (cpu->registers[one] & 0xff000000) >> 24;
 
 				cpu->program_counter += 2;
 				break;
@@ -427,7 +481,11 @@ int execute_loaded_memory(unsigned char * bytes, cpu * cpu) {
 					printf("\trA:%x\tf:%x\n", one, two);
 				}
 				
-				cpu->registers[one] = bytes[cpu->registers[ESP]];
+				cpu->registers[one] = (bytes[cpu->registers[ESP] + 0])
+				                    + (bytes[cpu->registers[ESP] + 1] << 8)
+				                    + (bytes[cpu->registers[ESP] + 2] << 16)
+				                    + (bytes[cpu->registers[ESP] + 3] << 24);
+
 				cpu->registers[ESP] += 4;
 				cpu->program_counter += 2;
 				break;
@@ -445,39 +503,38 @@ int execute_loaded_memory(unsigned char * bytes, cpu * cpu) {
 					printf("\trA:%x\trB:%x\tD:%x\n", one, two, dst);
 				}
 
-				scanf("%c", &in);
+				if (EOF == scanf("%c", &in)) {
+					cpu->zero = true;
+				} else cpu->zero = false;
 
 				bytes[cpu->registers[one] + dst] = in;
 
 				cpu->program_counter += 6;
-				cpu->zero = false;
 				break;
 			case 0xc1: /* readw */
-
 				one = (bytes[cpu->program_counter + 1] & 0xf0) >> 4;
 				two = (bytes[cpu->program_counter + 1] & 0x0f);
-				
+	
 				dst =    bytes[cpu->program_counter + 2] 
 				      + (bytes[cpu->program_counter + 3] << 8)
 				      + (bytes[cpu->program_counter + 4] << 16)
 				      + (bytes[cpu->program_counter + 5] << 24);
 
+				if (EOF == scanf("%i", &iin)) {
+					cpu->zero = true;
+				} else cpu->zero = false;
+				
+				bytes[cpu->registers[one] + dst + 0] =  iin & 0x000000ff;
+				bytes[cpu->registers[one] + dst + 1] = (iin & 0x0000ff00) >> 8;
+				bytes[cpu->registers[one] + dst + 2] = (iin & 0x00ff0000) >> 16;
+				bytes[cpu->registers[one] + dst + 3] = (iin & 0xff000000) >> 24;
+
 				if (DEVELOPMENT) {
 					printf("%x\treadw", cpu->program_counter);
-					printf("\trA:%x\trB:%x\tD:%x\n", one, two, dst);
-				}
-
-				scanf("%i", &iin);
-
-				val = 0;
-
-				for (; val < 4; val++) {
-					bytes[cpu->registers[one] + dst + val] = iin % 256;
-					iin /= 256;
+					printf("\trA:%x\trB:%x\tD:%x\t%i\t%i\n", one, two, dst, val, iin);
 				}
 
 				cpu->program_counter += 6;
-				cpu->zero = false;
 
 				break;
 			case 0xd0: /* writeb */
@@ -489,7 +546,7 @@ int execute_loaded_memory(unsigned char * bytes, cpu * cpu) {
 				      + (bytes[cpu->program_counter + 5] << 24);
 
 				if (DEVELOPMENT) 
-					printf("%i\twriteb bytes[%x + %x] - ", 
+					printf("%x\twriteb bytes[%x + %x] - ", 
 						cpu->program_counter, 
 						cpu->registers[one], 
 						dst);
@@ -513,8 +570,12 @@ int execute_loaded_memory(unsigned char * bytes, cpu * cpu) {
 				      + (bytes[cpu->program_counter + 4] << 16)
 				      + (bytes[cpu->program_counter + 5] << 24);
 
-				
-				printf("%i",bytes[cpu->registers[one] + dst]);
+				val =  (bytes[cpu->registers[two] + dst + 0])
+				     + (bytes[cpu->registers[two] + dst + 1] << 8)
+			             + (bytes[cpu->registers[two] + dst + 2] << 16)
+				     + (bytes[cpu->registers[two] + dst + 3] << 24);	
+
+				printf("%i",val);
 
 				cpu->program_counter += 6;
 				break;
